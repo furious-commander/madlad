@@ -94,6 +94,20 @@ function validateStringLength(option: Argument, string: string) {
   }
 }
 
+function parseDecimalString(option: Argument, rawValue: string) {
+  const prepared = prepareNumericalString(rawValue)
+
+  if (prepared === null) {
+    return Error('Expected decimal string for ' + option.key + ', got ' + rawValue)
+  }
+
+  if (!/^[0-9]+(\.[0-9]+)?$/.test(prepared)) {
+    return Error('Expected decimal string for ' + option.key + ', got ' + rawValue)
+  }
+
+  return { value: prepared, skip: 1 }
+}
+
 function parseHexString(option: Argument, rawValue: string) {
   const lowercase = rawValue.toLowerCase()
   const hexString = lowercase.startsWith('0x') ? lowercase.slice(2) : lowercase
@@ -139,6 +153,8 @@ export function parseValue(
     return parseBigInt(option, rawValue)
   } else if (type === 'hex-string') {
     return parseHexString(option, rawValue)
+  } else if (type === 'decimal-string') {
+    return parseDecimalString(option, rawValue)
   } else {
     return validateStringLength(option, rawValue) || { value: rawValue, skip: 1 }
   }
