@@ -58,6 +58,21 @@ it('should reject an invalid enum value for a positional argument', async () => 
   expect(context).toBe('[color] must be one of: red, green, blue')
 })
 
+it('should reject an invalid enum value for an option that has a default', async () => {
+  const parser = createParser()
+  parser.addCommand(
+    new Command('paint', 'Paint').withOption({
+      key: 'color',
+      description: 'Color',
+      type: 'enum',
+      enum: ['red', 'green', 'blue'],
+      default: 'blue',
+    }),
+  )
+  const context = await parser.parse(['paint', '--color', 'purple'])
+  expect(context).toBe('[color] must be one of: red, green, blue')
+})
+
 it('should use the default enum value when no value is provided', async () => {
   const parser = createParser()
   parser.addCommand(
