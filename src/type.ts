@@ -35,6 +35,7 @@ export interface Argument<T = unknown> {
   handler?: () => void
   global?: boolean
   array?: boolean
+  validate?: (value: T, context: ParsedContext) => string[]
 }
 
 function prependName(group: Group, name: string) {
