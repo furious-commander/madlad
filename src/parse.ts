@@ -133,6 +133,16 @@ function parseHexString(option: Argument, rawValue: string) {
   }
 }
 
+function parseEnum(option: Argument, rawValue: string) {
+  const allowed = option.enum || []
+
+  if (!allowed.includes(rawValue)) {
+    return Error('[' + option.key + '] must be one of: ' + allowed.join(', '))
+  }
+
+  return { value: rawValue, skip: 1 }
+}
+
 export function parseValue(
   option: Argument,
   rawValue: string,
@@ -155,6 +165,8 @@ export function parseValue(
     return parseHexString(option, rawValue)
   } else if (type === 'decimal-string') {
     return parseDecimalString(option, rawValue)
+  } else if (type === 'enum') {
+    return parseEnum(option, rawValue)
   } else {
     return validateStringLength(option, rawValue) || { value: rawValue, skip: 1 }
   }

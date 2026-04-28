@@ -17,7 +17,8 @@ export interface LeafCommand extends BaseCommand {
 export interface Argument<T = unknown> {
   key: string
   description: string
-  type?: 'string' | 'boolean' | 'number' | 'bigint' | 'hex-string' | 'decimal-string'
+  type?: 'string' | 'boolean' | 'number' | 'bigint' | 'hex-string' | 'decimal-string' | 'enum'
+  enum?: string[]
   required?: boolean | { when: string } | { unless: string }
   conflicts?: string
   default?: T
