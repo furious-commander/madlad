@@ -281,6 +281,37 @@ export function createParser(options?: {
       }
     }
 
+    for (const option of options) {
+      if (!option.validate) {
+        continue
+      }
+      const value = context.options[option.key] !== undefined ? context.options[option.key] : context.sibling?.options[option.key]
+      if (value === undefined) {
+        continue
+      }
+      const errors = option.validate(value, context)
+      if (errors.length > 0) {
+        return handleError(context, errors.join('\n'))
+      }
+    }
+
+    for (const commandArgument of commandArguments) {
+      if (!commandArgument.validate) {
+        continue
+      }
+      const value =
+        context.arguments[commandArgument.key] !== undefined
+          ? context.arguments[commandArgument.key]
+          : context.sibling?.arguments[commandArgument.key]
+      if (value === undefined) {
+        continue
+      }
+      const errors = commandArgument.validate(value, context)
+      if (errors.length > 0) {
+        return handleError(context, errors.join('\n'))
+      }
+    }
+
     return context
   }
 
